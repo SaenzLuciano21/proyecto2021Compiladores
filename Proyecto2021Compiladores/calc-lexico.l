@@ -109,7 +109,7 @@ rel_op [<>]
 								printf("INT: %d\n",atoi(yytext)); 
                                 return INT; }
 
-{letra}({letra}|{digito})*  { 
+{letra}({letra}|"_"|{digito})*  { 
 								yylval.s=(char*) malloc(sizeof(yytext)*yyleng);
 								strcpy(yylval.s,yytext);
                                 printf("ID: %s\n",yytext);
@@ -123,9 +123,8 @@ rel_op [<>]
                                 printf("%s\n",yytext);
                             	return *yytext; }
 
-\n|\                        { ; }
-\t                          { ; } /*Comentario:Ignore whitespace and lineskip*/
-"//".*\n                    { printf("Comentario: %s\n",yytext); }
+\n                          { ; }   /*Comentario:Ignore whitespace and lineskip*/
+"//"|"/*"|"*/"\n            { printf("Comentario: %s\n",yytext); }
 .                           yyerror(); /* ignore all the rest */
 %%
 
