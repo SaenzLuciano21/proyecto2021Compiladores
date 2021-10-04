@@ -3,9 +3,10 @@
 #include <string.h>
 #include <stdio.h>
 #include "calc-sintaxis.tab.h"
-
+int num_linea = 1;
 void yyerror();
 %}
+%x COMMENT
 %option noyywrap
 %option yylineno
 
@@ -13,6 +14,8 @@ letra [a-zA-Z]
 digito [0-9]
 arith_op [-+*/%]
 rel_op [<>]
+
+
 %%
 "integer"   				{
 								yylval.s=(char *) malloc(sizeof(yytext)*yyleng);
@@ -124,7 +127,13 @@ rel_op [<>]
                             	return *yytext; }
 
 \n                          { ; }   /*Comentario:Ignore whitespace and lineskip*/
-"//"|"/*"|"*/"\n            { printf("Comentario: %s\n",yytext); }
+"/*"                        {BEGIN(COMMENT);}
+<COMMENT>[^*\n]*
+<COMMENT>[^*\n]*\n          {++num_linea;}
+<COMMENT>"*"+[^*/\n]*
+<COMMENT>"*"+[^*/\n]*\n     {++num_linea;}
+<COMMENT>"*"+"/"            {BEGIN(INITIAL);}
+"//".*\n                    { printf("Comentario: %s\n",yytext); }
 .                           ; /* ignore all the rest */
 %%
 
