@@ -177,9 +177,9 @@ expr: ID                                        {   info *infI = (info *)malloc(
 | expr EQUAL expr                               {   info *infS = (info *)malloc(sizeof(info));
                                                     $$ = create_bNode(IGUAL, infS, $1, $3); }
 | expr '<' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(MENOR, infS, $1, $3);}
+                                                    $$ = create_bNode(MENOR, infS, $1, $3); }
 | expr '>' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(MAYOR, infS, $1, $3);}
+                                                    $$ = create_bNode(MAYOR, infS, $1, $3); }
 | '-' expr %prec UNARY                          {   info *infS = (info *)malloc(sizeof(info));
                                                     $$ = create_bNode(NEGATIVO, infS, $2, NULL); }
 | '!' expr %prec UNARY                          {   info *infS = (info *)malloc(sizeof(info));
@@ -188,12 +188,13 @@ expr: ID                                        {   info *infI = (info *)malloc(
 ;
 
 litaral: INT                                    {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(LITERAL, infS, NULL, NULL);}
+                                                    $$ = create_bNode(LITERAL, infS, NULL, NULL); }
 | bool_literal                                  {   $$ = $1; }
 ;
 
 bool_literal: TRUE                              {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(LITERAL, infS, NULL, NULL);}
+                                                    $$ = create_bNode(LITERAL, infS, NULL, NULL); }
 | FALSE                                         {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(LITERAL, infS, NULL, NULL);}
+                                                    $$ = create_bNode(LITERAL, infS, NULL, NULL); }
 ;
+%%

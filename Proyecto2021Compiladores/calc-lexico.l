@@ -125,7 +125,7 @@ rel_op [<>]
 
 \n                          { ; }   /*Comentario:Ignore whitespace and lineskip*/
 "//"|"/*"|"*/"\n            { printf("Comentario: %s\n",yytext); }
-.                           yyerror(); /* ignore all the rest */
+.                           ; /* ignore all the rest http://es.tldp.org/Manuales-LuCAS/FLEX/flex-es-2.5.html#SEC23*/
 %%
 
 void yyerror() {
