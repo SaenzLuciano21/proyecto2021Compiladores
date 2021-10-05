@@ -2,9 +2,36 @@
 #define Structs_program_h
 
 /*Definicion de tipos enumerados*/
-enum tLabel { METHOD, STM, LITERAL, VAR, SUMA, MULT, RESTA, PROG, BLOCK, PARAMETERS, IDENTIFICADOR, EXPR, NEGACION, NEGATIVO, PORC, DIV, IAND, IOR, IGUAL, MENOR, MAYOR };
+enum tLabel
+{
+    METHOD,
+    STM,
+    LITERAL,
+    VAR,
+    SUMA,
+    MULT,
+    RESTA,
+    PROG,
+    BLOCK,
+    PARAMETERS,
+    IDENTIFICADOR,
+    EXPR,
+    NEGACION,
+    NEGATIVO,
+    PORC,
+    DIV,
+    IAND,
+    IOR,
+    IGUAL,
+    MENOR,
+    MAYOR
+};
 
-enum tType { boolean, integer };
+enum tType
+{
+    boolean,
+    integer
+};
 
 /*Estructura del nodo*/
 struct infoToken
@@ -22,7 +49,7 @@ typedef struct infoToken info;
 struct bTree
 {
     enum tLabel fact;
-    struct bTree *right, *left;
+    struct bTree *right, *middle, *left;
     info *infoN;
 };
 
@@ -30,7 +57,7 @@ struct bTree
 typedef struct bTree bNode;
 
 /*perfil de las funciones*/
-bNode *create_node(enum tLabel label, info *infN, bNode *left, bNode *right);
+bNode *create_node(enum tLabel label, info *infN, bNode *left, bNode *middle, bNode *right);
 void freeMemory(bNode *tree);
 void inOrder(bNode *tree);
 

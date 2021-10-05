@@ -3,9 +3,10 @@
 #include <string.h>
 #include <stdio.h>
 #include "calc-sintaxis.tab.h"
-
+int num_linea = 1;
 void yyerror();
 %}
+%x COMMENT
 %option noyywrap
 %option yylineno
 
@@ -117,15 +118,21 @@ rel_op [<>]
 
 {arith_op}|{rel_op}|"="|"!" { 
                                 printf("OPERATION: %s\n",yytext);
-                                return *yytext; }                               
+                                return *yytext; }
 
 [;(){}]       	            {	
                                 printf("%s\n",yytext);
                             	return *yytext; }
 
 \n                          { ; }   /*Comentario:Ignore whitespace and lineskip*/
-"//"|"/*"|"*/"\n            { printf("Comentario: %s\n",yytext); }
-.                           ; /* ignore all the rest http://es.tldp.org/Manuales-LuCAS/FLEX/flex-es-2.5.html#SEC23*/
+"/*"                        { BEGIN(COMMENT); }
+<COMMENT>[^*\n]*
+<COMMENT>[^*\n]*\n          { ++num_linea; }
+<COMMENT>"*"+[^*/\n]*
+<COMMENT>"*"+[^*/\n]*\n     { ++num_linea; }
+<COMMENT>"*"+"/"            { BEGIN(INITIAL); }
+"//".*\n                    { printf("Comentario: %s\n",yytext); }
+.                           ; /* ignore all the rest */
 %%
 
 void yyerror() {
