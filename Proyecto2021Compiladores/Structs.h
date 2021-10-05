@@ -1,6 +1,8 @@
 #ifndef Structs_program_h
 #define Structs_program_h
 
+/*char *cases[] = {"METHOD", "STM", "LITERAL", "VAR", "SUMA", "MULT", "RESTA", "PROG", "BLOCK", "PARAMETERS", "IDENTIFICADOR", "EXPR", "NEGACION", "NEGATIVO", "PORC", "DIV", "IAND", "IOR", "IGUAL", "MENOR", "MAYOR"};*/
+
 /*Definicion de tipos enumerados*/
 enum tLabel
 {

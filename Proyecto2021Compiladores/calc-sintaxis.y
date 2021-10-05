@@ -49,8 +49,7 @@ struct bTree *ast;
 /*testear el arbol*/
 %%
 prog: PROGRAM '{' list_var_decl list_method_decl '}'{  
-                                                        ast = create_bNode(PROG, NULL, $3, NULL, $4); 
-                                                        //printf("----ENTRO----\n");
+                                                        ast = create_bNode(PROG, NULL, $3, NULL, $4);
                                                         inOrder(ast); }
 | PROGRAM '{' list_var_decl '}'                     {  
                                                         ast = create_bNode(PROG, NULL, $3, NULL, NULL); 

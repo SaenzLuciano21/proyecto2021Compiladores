@@ -4,6 +4,8 @@
 #include "Structs.h"
 #define SIZE 16
 
+char *cases[] = {"METHOD", "STM", "LITERAL", "VAR", "SUMA", "MULT", "RESTA", "PROG", "BLOCK", "PARAMETERS", "IDENTIFICADOR", "EXPR", "NEGACION", "NEGATIVO", "PORC", "DIV", "IAND", "IOR", "IGUAL", "MENOR", "MAYOR"};
+
 /*Create bNode*/
 bNode *create_bNode(enum tLabel label, info *infN, bNode *left, bNode *middle, bNode *right)
 {
@@ -34,8 +36,7 @@ void inOrder(bNode *tree)
 {
     if (tree)
     {   
-        printf("----ENTRO AL ARBOL----\n");
-        printf(" %d |", tree->fact);
+        printf("%s |", cases[tree->fact]);
         inOrder(tree->left);
         inOrder(tree->right);
     }
