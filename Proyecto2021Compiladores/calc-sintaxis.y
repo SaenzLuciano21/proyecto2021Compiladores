@@ -45,15 +45,12 @@ struct bTree *ast;
 %left '+' '-'
 %left '*' '/' '%'
 %left UNARY
-/*rellenar la informacion de los nodos*/
-/*testear el arbol*/
 %%
 prog: PROGRAM '{' list_var_decl list_method_decl '}'{  
                                                         ast = create_bNode(PROG, NULL, $3, NULL, $4);
                                                         inOrder(ast); }
 | PROGRAM '{' list_var_decl '}'                     {  
                                                         ast = create_bNode(PROG, NULL, $3, NULL, NULL); 
-                                                        printf("----ENTRO----\n");
                                                         inOrder(ast); }
 | PROGRAM '{' list_method_decl '}'                  {  
                                                         ast = create_bNode(PROG, NULL, NULL, NULL, $3); 
@@ -69,27 +66,40 @@ list_method_decl: method_decl                       {   $$ = $1; }
 ;
 
 parameters: type ID                                 {   info *infP = (info *)malloc(sizeof(info));
-                                                        infP->name = $2;
-                                                        //infP->type = $1;
+                                                        /*infP->name = $2;
+                                                        infP->type = $1;*/
                                                         $$ = create_bNode(PARAMETERS, infP, NULL, NULL, NULL); }
-| type ID ',' parameters                            {   info *infP = (info *)malloc(sizeof(info));
-                                                        infP->name = $2;
-                                                        //infP->type = $1;
+| type ID ',' parameters                            {   //info *infP = (info *)malloc(sizeof(info));
+                                                        //infP->name = $2;
                                                         $$ = create_bNode(PARAMETERS, NULL, NULL, NULL, $4); }
 ;
 
 method_decl: type ID '(' parameters')' block    {   info *infM = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(METHOD, NULL, $4, NULL, $6); }
+                                                    /*infM->name = $2;
+                                                    infM->type = $1;*/
+                                                    $$ = create_bNode(METHOD, infM, $4, NULL, $6); }
+
 | type ID '(' parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(METHOD, NULL, $4, NULL, NULL); }
+                                                    /*infM->name = $2;
+                                                    infM->type = $1;*/
+                                                    $$ = create_bNode(METHOD, infM, $4, NULL, NULL); }
+
 | VOID ID '(' parameters')' block               {   info *infM = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(METHOD, NULL, $4, NULL, $6); }
+                                                    /*infM->name = $2;*/
+                                                    $$ = create_bNode(METHOD, infM, $4, NULL, $6); }
+
 | VOID ID '(' parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(METHOD, NULL, $4, NULL, NULL); }
+                                                    /*infM->name = $2;*/
+                                                    $$ = create_bNode(METHOD, infM, $4, NULL, NULL); }
+
 | VOID ID '('  ')' block                        {   info *infM = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(METHOD, NULL, NULL, NULL, $5); }
+                                                    /*infM->name = $2;*/
+                                                    $$ = create_bNode(METHOD, infM, NULL, NULL, $5); }
+
 | type ID '(' ')' EXTERN ';'                    {   info *infM = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(METHOD, NULL, NULL, NULL, NULL); }
+                                                    /*infM->name = $2;
+                                                    infM->type = $1;*/
+                                                    $$ = create_bNode(METHOD, infM, NULL, NULL, NULL); }
 ;
 
 block: '{' list_var_decl '}'                    {   
@@ -110,10 +120,10 @@ var_decl: type list_id ';'                      {
 ;
 
 list_id: ID                                     {   info *infI = (info *)malloc(sizeof(info));
-                                                    infI->name = $1;
+                                                    /*infI->name = $1;*/
                                                     $$ = create_bNode(IDENTIFICADOR, infI, NULL, NULL, NULL); }
 | ID ',' list_id                                {   info *infI = (info *)malloc(sizeof(info));
-                                                    infI->name = $1;
+                                                    /*infI->name = $1;*/
                                                     $$ = create_bNode(IDENTIFICADOR, infI, $3, NULL, NULL); }
 ;
 
@@ -133,18 +143,19 @@ list_statement: statement                       {   $$ = $1; }
 statement: ID '=' expr ';'                      {   info *infS = (info *)malloc(sizeof(info));
                                                     infS->name = $1;
                                                     $$ = create_bNode(STM, infS, NULL, NULL, $3); }
-| method_call ';'                               {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(STM, infS, $1, NULL, NULL); }
-| IF '(' expr ')' THEN block ELSE block         {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(STM, infS, $3, $6, $8); }
-| WHILE '(' expr ')' block                      {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(STM, infS, $3, NULL, $5); }
+| method_call ';'                               {   
+                                                    $$ = create_bNode(STM, NULL, $1, NULL, NULL); }
+| IF '(' expr ')' THEN block ELSE block         {   
+                                                    $$ = create_bNode(STM,NULL, $3, $6, $8); }
+| WHILE '(' expr ')' block                      {   
+                                                    $$ = create_bNode(STM, NULL, $3, NULL, $5); }
 | RETURN expr ';'                               {   info *infS = (info *)malloc(sizeof(info));
+                                                    //infS->value = $2; la expr puede ser un arbol
                                                     $$ = create_bNode(STM, infS, $2, NULL, NULL); }
-| RETURN ';'                                    {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(STM, infS, NULL, NULL, NULL); }
-| ';'                                           {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(STM, infS, NULL, NULL, NULL); }
+| RETURN ';'                                    {   
+                                                    $$ = create_bNode(STM, NULL, NULL, NULL, NULL); }
+| ';'                                           {   
+                                                    $$ = create_bNode(STM, NULL, NULL, NULL, NULL); }
 | block                                         {   $$ = $1; }
 ;
 
@@ -164,31 +175,30 @@ expr: ID                                        {   info *infI = (info *)malloc(
                                                     $$ = create_bNode(IDENTIFICADOR, infI, NULL, NULL, NULL); }
 | method_call                                   {   $$ = $1; }
 | litaral                                       {   $$ = $1; }
-| expr '+' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    /*infS->value = expr + expr?*/
-                                                    $$ = create_bNode(SUMA, infS, $1, NULL, $3); }
-| expr '-' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(RESTA, infS, $1, NULL, $3); }
-| expr '*' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(MULT, infS, $1, NULL, $3); }
-| expr '/' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(DIV, infS, $1, NULL, $3); }
-| expr '%' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(PORC, infS, $1, NULL, $3); }
-| expr AND expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(IAND, infS, $1, NULL, $3); }
-| expr OR expr                                  {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(IOR, infS, $1, NULL, $3); }
-| expr EQUAL expr                               {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(IGUAL, infS, $1, NULL, $3); }
-| expr '<' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(MENOR, infS, $1, NULL, $3); }
-| expr '>' expr                                 {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(MAYOR, infS, $1, NULL, $3); }
-| '-' expr %prec UNARY                          {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(NEGATIVO, infS, $2, NULL, NULL); }
-| '!' expr %prec UNARY                          {   info *infS = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(NEGACION, infS, $2, NULL, NULL); }
+| expr '+' expr                                 {   
+                                                    $$ = create_bNode(SUMA, NULL, $1, NULL, $3); }
+| expr '-' expr                                 {   
+                                                    $$ = create_bNode(RESTA, NULL, $1, NULL, $3); }
+| expr '*' expr                                 {   
+                                                    $$ = create_bNode(MULT, NULL, $1, NULL, $3); }
+| expr '/' expr                                 {   
+                                                    $$ = create_bNode(DIV, NULL, $1, NULL, $3); }
+| expr '%' expr                                 {   
+                                                    $$ = create_bNode(PORC, NULL, $1, NULL, $3); }
+| expr AND expr                                 {   
+                                                    $$ = create_bNode(IAND, NULL, $1, NULL, $3); }
+| expr OR expr                                  {   
+                                                    $$ = create_bNode(IOR,NULL, $1, NULL, $3); }
+| expr EQUAL expr                               {   
+                                                    $$ = create_bNode(IGUAL, NULL, $1, NULL, $3); }
+| expr '<' expr                                 {   
+                                                    $$ = create_bNode(MENOR, NULL, $1, NULL, $3); }
+| expr '>' expr                                 {   
+                                                    $$ = create_bNode(MAYOR, NULL, $1, NULL, $3); }
+| '-' expr %prec UNARY                          {   
+                                                    $$ = create_bNode(NEGATIVO, NULL, $2, NULL, NULL); }
+| '!' expr %prec UNARY                          {   
+                                                    $$ = create_bNode(NEGACION, NULL, $2, NULL, NULL); }
 | '(' expr ')'                                  {   $$ = $2; }
 ;
 

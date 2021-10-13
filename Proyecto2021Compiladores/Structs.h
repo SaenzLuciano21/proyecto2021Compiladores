@@ -1,10 +1,8 @@
 #ifndef Structs_program_h
 #define Structs_program_h
 
-/*char *cases[] = {"METHOD", "STM", "LITERAL", "VAR", "SUMA", "MULT", "RESTA", "PROG", "BLOCK", "PARAMETERS", "IDENTIFICADOR", "EXPR", "NEGACION", "NEGATIVO", "PORC", "DIV", "IAND", "IOR", "IGUAL", "MENOR", "MAYOR"};*/
-
 /*Definicion de tipos enumerados*/
-enum tLabel
+typedef enum tLabel
 {
     METHOD,
     STM,
@@ -27,21 +25,22 @@ enum tLabel
     IGUAL,
     MENOR,
     MAYOR
-};
+} t;
 
-enum tType
+typedef enum tType
 {
-    boolean,
-    integer
-};
+    BOOLEAN,
+    INTEGER
+} tV;
 
 /*Estructura del nodo*/
 struct infoToken
 {
+    char *name;
     int value;
     int line;
     enum tType type;
-    char *name;
+    enum tLabel label;
 };
 
 /*Definicion del nombre del nodo*/
@@ -57,10 +56,5 @@ struct bTree
 
 /*Definicion del nombre del arbol*/
 typedef struct bTree bNode;
-
-/*perfil de las funciones*/
-bNode *create_node(enum tLabel label, info *infN, bNode *left, bNode *middle, bNode *right);
-void freeMemory(bNode *tree);
-void inOrder(bNode *tree);
 
 #endif
