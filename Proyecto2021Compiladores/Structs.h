@@ -29,8 +29,8 @@ typedef enum tLabel
 
 typedef enum tType
 {
-    BOOLEAN,
-    INTEGER
+    boolean,
+    integer
 } tV;
 
 /*Estructura del nodo*/
@@ -40,7 +40,6 @@ struct infoToken
     int value;
     int line;
     enum tType type;
-    enum tLabel label;
 };
 
 /*Definicion del nombre del nodo*/

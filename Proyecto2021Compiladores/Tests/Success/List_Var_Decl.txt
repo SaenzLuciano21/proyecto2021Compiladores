@@ -1,7 +1,5 @@
 program
 {
-    integer a;
-    bool c;
-    integer d;
-    bool e;
+    integer a, x;
+    .
 }

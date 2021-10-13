@@ -5,6 +5,7 @@
 #include "tree.c"
 
 struct bTree *ast;
+extern int yylineno;
 %} 
 %union { int i; char *s; struct bTree *p; enum tType * t; }
 %token<i> INT
@@ -66,39 +67,40 @@ list_method_decl: method_decl                       {   $$ = $1; }
 ;
 
 parameters: type ID                                 {   info *infP = (info *)malloc(sizeof(info));
-                                                        /*infP->name = $2;
-                                                        infP->type = $1;*/
+                                                        infP->name = $2;
+                                                        infP->type = (enum tType)$1;
                                                         $$ = create_bNode(PARAMETERS, infP, NULL, NULL, NULL); }
-| type ID ',' parameters                            {   //info *infP = (info *)malloc(sizeof(info));
-                                                        //infP->name = $2;
-                                                        $$ = create_bNode(PARAMETERS, NULL, NULL, NULL, $4); }
+| type ID ',' parameters                            {   info *infP = (info *)malloc(sizeof(info));
+                                                        infP->name = $2;
+                                                        infP->type = (enum tType)$1;
+                                                        $$ = create_bNode(PARAMETERS, infP, NULL, NULL, $4); }
 ;
 
 method_decl: type ID '(' parameters')' block    {   info *infM = (info *)malloc(sizeof(info));
-                                                    /*infM->name = $2;
-                                                    infM->type = $1;*/
+                                                    infM->name = $2;
+                                                    infM->type = (enum tType)$1;
                                                     $$ = create_bNode(METHOD, infM, $4, NULL, $6); }
 
 | type ID '(' parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
-                                                    /*infM->name = $2;
-                                                    infM->type = $1;*/
+                                                    infM->name = $2;
+                                                    infM->type = (enum tType)$1;
                                                     $$ = create_bNode(METHOD, infM, $4, NULL, NULL); }
 
 | VOID ID '(' parameters')' block               {   info *infM = (info *)malloc(sizeof(info));
-                                                    /*infM->name = $2;*/
+                                                    infM->name = $2;
                                                     $$ = create_bNode(METHOD, infM, $4, NULL, $6); }
 
 | VOID ID '(' parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
-                                                    /*infM->name = $2;*/
+                                                    infM->name = $2;
                                                     $$ = create_bNode(METHOD, infM, $4, NULL, NULL); }
 
 | VOID ID '('  ')' block                        {   info *infM = (info *)malloc(sizeof(info));
-                                                    /*infM->name = $2;*/
+                                                    infM->name = $2;
                                                     $$ = create_bNode(METHOD, infM, NULL, NULL, $5); }
 
 | type ID '(' ')' EXTERN ';'                    {   info *infM = (info *)malloc(sizeof(info));
-                                                    /*infM->name = $2;
-                                                    infM->type = $1;*/
+                                                    infM->name = $2;
+                                                    infM->type = (enum tType)$1;
                                                     $$ = create_bNode(METHOD, infM, NULL, NULL, NULL); }
 ;
 
@@ -115,15 +117,17 @@ list_var_decl: var_decl                         {   $$ = $1; }
                                                     $$ = create_bNode(VAR, NULL, $2, NULL, $1); }
 ;
 
-var_decl: type list_id ';'                      {
-                                                    $$ = create_bNode(VAR, NULL, $2, NULL, NULL); }
+var_decl: type list_id ';'                      {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->type = (enum tType)$1;
+                                                    //printf("%d \n", yylineno );
+                                                    $$ = create_bNode(VAR, infI, $2, NULL, NULL); }
 ;
 
 list_id: ID                                     {   info *infI = (info *)malloc(sizeof(info));
-                                                    /*infI->name = $1;*/
+                                                    infI->name = $1;
                                                     $$ = create_bNode(IDENTIFICADOR, infI, NULL, NULL, NULL); }
 | ID ',' list_id                                {   info *infI = (info *)malloc(sizeof(info));
-                                                    /*infI->name = $1;*/
+                                                    infI->name = $1;
                                                     $$ = create_bNode(IDENTIFICADOR, infI, $3, NULL, NULL); }
 ;
 
@@ -149,9 +153,8 @@ statement: ID '=' expr ';'                      {   info *infS = (info *)malloc(
                                                     $$ = create_bNode(STM,NULL, $3, $6, $8); }
 | WHILE '(' expr ')' block                      {   
                                                     $$ = create_bNode(STM, NULL, $3, NULL, $5); }
-| RETURN expr ';'                               {   info *infS = (info *)malloc(sizeof(info));
-                                                    //infS->value = $2; la expr puede ser un arbol
-                                                    $$ = create_bNode(STM, infS, $2, NULL, NULL); }
+| RETURN expr ';'                               {   
+                                                    $$ = create_bNode(STM, NULL, $2, NULL, NULL); }
 | RETURN ';'                                    {   
                                                     $$ = create_bNode(STM, NULL, NULL, NULL, NULL); }
 | ';'                                           {   
@@ -160,9 +163,11 @@ statement: ID '=' expr ';'                      {   info *infS = (info *)malloc(
 ;
 
 method_call: ID '(' ')'                         {   info *infM = (info *)malloc(sizeof(info));
+                                                    infM->name = $1;
                                                     $$ = create_bNode(METHOD, infM, NULL, NULL, NULL); }
-| ID '(' list_expr ')'                          {   info *infoM = (info *)malloc(sizeof(info));
-                                                    $$ = create_bNode(METHOD, infoM, $3, NULL, NULL); }
+| ID '(' list_expr ')'                          {   info *infM = (info *)malloc(sizeof(info));
+                                                    infM->name = $1;
+                                                    $$ = create_bNode(METHOD, infM, $3, NULL, NULL); }
 ;
 
 list_expr: expr                                 {   $$ = $1; }

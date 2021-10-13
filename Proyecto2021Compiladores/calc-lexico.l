@@ -120,19 +120,19 @@ rel_op [<>]
                                 printf("OPERATION: %s\n",yytext);
                                 return *yytext; }
 
-[;(){}]       	            {	
+[;(){},]       	            {	
                                 printf("%s\n",yytext);
                             	return *yytext; }
 
-\n                          { ; }   /*Comentario:Ignore whitespace and lineskip*/
+\n|\t|" "                          { ; }   /*Comentario:Ignore whitespace and lineskip*/
 "/*"                        { BEGIN(COMMENT); }
 <COMMENT>[^*\n]*
 <COMMENT>[^*\n]*\n          { ++num_linea; }
 <COMMENT>"*"+[^*/\n]*
 <COMMENT>"*"+[^*/\n]*\n     { ++num_linea; }
 <COMMENT>"*"+"/"            { BEGIN(INITIAL); }
-"//".*\n                    { printf("Comentario: %s\n",yytext); }
-.                           ; /* ignore all the rest */
+"//".*\n                    {}
+.                           { printf("Error, simbolo invalido '%s' Linea: %d\n",yytext, yylineno); } /* ignore all the rest */
 %%
 
 void yyerror() {

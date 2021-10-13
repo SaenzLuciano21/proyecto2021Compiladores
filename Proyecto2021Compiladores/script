@@ -5,7 +5,9 @@ bison -d calc-sintaxis.y
 gcc lex.yy.c calc-sintaxis.tab.c
 
 echo "----------------------------------------------------------------------------"
-echo "----------------------------- Execute all tests SUCCESS ----------------------------"
+echo
+echo "----------------------------------------------------------------------------"
+echo "------------------------- Execute all tests SUCCESS ------------------------"
 echo "----------------------------------------------------------------------------"
 echo
 for archivoActual in $(ls Tests/Success);do
@@ -13,14 +15,18 @@ for archivoActual in $(ls Tests/Success);do
 	echo "Running "$archivoActual" ..."
              ./a.out  < "./Tests/Success/"$archivoActual
 	echo
+	echo "----------------------------------------------------------------------------"
+	echo
 done 
 echo "----------------------------------------------------------------------------"
-echo "----------------------------- Execute all tests FAIL ----------------------------"
+echo "-------------------------- Execute all tests FAIL --------------------------"
 echo "----------------------------------------------------------------------------"
 echo
 for archivoActual in $(ls Tests/Fail);do
 	echo "----------------------------------------------------------------------------"
 	echo "Running "$archivoActual" ..."
              ./a.out  < "./Tests/Fail/"$archivoActual
+	echo
+	echo "----------------------------------------------------------------------------"
 	echo
 done

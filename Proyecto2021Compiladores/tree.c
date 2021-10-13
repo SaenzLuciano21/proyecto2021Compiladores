@@ -40,13 +40,13 @@ void inOrder(bNode *tree)
         printf("NULL | \n");
     else
     {
-        printf("%s | %s \n", cases[tree->fact], tree->infoN);
+        printf("%s | \n", cases[tree->fact]);
         inOrder(tree->left);
         inOrder(tree->right);
     }
 }
 
-int checkNode(bNode *tree)
+/*int checkNode(bNode *tree)
 {
     if (strcmp(tree->infoN->label, "SUMA") == 0)
     {
@@ -159,4 +159,4 @@ int checkNode(bNode *tree)
         checkNode(tree->left);
     }
     return 0;
-}
+}*/
