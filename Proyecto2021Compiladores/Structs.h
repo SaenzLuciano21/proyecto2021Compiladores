@@ -57,3 +57,15 @@ struct bTree
 typedef struct bTree bNode;
 
 #endif
+
+/* ------------------ List ------------------- */
+
+/*Estructura del arbol*/
+struct listNode
+{
+    info *infoN;
+    struct lnode *next;
+};
+
+typedef struct listNode lnode;
+ 
