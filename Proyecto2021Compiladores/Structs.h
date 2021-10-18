@@ -61,11 +61,11 @@ typedef struct bTree bNode;
 /* ------------------ List ------------------- */
 
 /*Estructura del arbol*/
-struct listNode
+struct stackNode
 {
     info *infoN;
     struct lnode *next;
 };
 
-typedef struct listNode lnode;
+typedef struct stackNode sNode;
  

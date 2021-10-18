@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "Structs.h"
+#include "stack.c"
 #define SIZE 16
 
 char *cases[] = {"METHOD", "STM", "LITERAL", "VAR", "SUMA", "MULT", "RESTA", "PROG", "BLOCK", "PARAMETERS", "IDENTIFICADOR", "EXPR", "NEGACION", "NEGATIVO", "PORC", "DIV", "IAND", "IOR", "IGUAL", "MENOR", "MAYOR"};
@@ -45,6 +45,42 @@ void inOrder(bNode *tree)
         inOrder(tree->right);
     }
 }
+
+/* inorder tree traversal */
+void inOrder(bNode *root)
+{
+    /* set current to root of binary tree */
+    bNode *current = root;
+    sNode *s = NULL; /* Initialize stack s */
+    int done = 0;
+
+    while (!done)
+    {
+        /* Reach the left most bNode of the current bNode */
+        if(current != NULL) 
+        {
+            push(&s, current);											
+            current = current->left;
+        }
+        else 
+        {
+            if (!isEmpty(s)) 
+            {
+                current = pop(&s);
+
+                if (current->fact == VAR) 
+                {
+                    //reference current->infoN in the symboltable insert(current->infoN)
+                }
+
+                /* Visit right subtree */
+                current = current->right;
+            }
+            else
+                done = 1;
+        }
+    } /* end of while */
+}	
 
 /*int checkNode(bNode *tree)
 {
