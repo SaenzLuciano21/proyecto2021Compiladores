@@ -56,16 +56,40 @@ struct bTree
 /*Definicion del nombre del arbol*/
 typedef struct bTree bNode;
 
+struct treeStack
+{
+    struct bTree *treeNode;
+    struct treeStack *next;
+};
+
+typedef struct treeStack tStack;
+
 #endif
 
 /* ------------------ List ------------------- */
 
-/*Estructura del arbol*/
-struct stackNode
+/* Estructura de la tabla de simbolos */
+struct listNode
 {
     info *infoN;
-    struct lnode *next;
+    struct listNode *next;
+};
+
+/* Nodo para lista */
+typedef struct listNode list;
+
+
+/* ------------------ Stack para la tabla de simbolos ------------------- */
+
+/* Estructura de la pila */
+struct stackNode
+{
+    list *head;
+    struct stackNode *next;
 };
 
 typedef struct stackNode sNode;
+
+
+
  

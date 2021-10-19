@@ -4,9 +4,8 @@
 #include "Structs.h"
 
 // Append a new element to the top of the stack
-void push(info *inf, sNode **stack) 
+void push(list *lvl, sNode **stack) 
 {   
-
     sNode *new = (sNode*) malloc(sizeof(sNode)); 
     if(new == NULL)
     {
@@ -14,17 +13,17 @@ void push(info *inf, sNode **stack)
         getchar();
         exit(0);
     }	
-    new -> infoN = inf; 
+    new -> head = lvl; 
     new -> next = *stack;  
     (*stack) = new;  
 }
 
 // Remove element from the top of the stack
-info * pop(sNode **stack) 
+list * pop(sNode **stack) 
 {
     if(*stack != NULL){
         sNode *tempPtr = *stack;
-        info *res = tempPtr -> infoN;
+        info *res = tempPtr -> head;
         *stack = (*stack) -> next;
         free(tempPtr);
         return res;
@@ -35,15 +34,21 @@ info * pop(sNode **stack)
         exit(0);
     }
 }
-// Returns the info at the top of the stack
-info* top(sNode **stack) 
+// Returns the current lvl 
+list* top(sNode **stack) 
 {
     if(*stack != NULL){
         sNode *tempPtr = *stack;
-        info *res = tempPtr -> infoN;
+        info *res = tempPtr -> head;
         return res;
     }
     else {
         printf("The stack is empty.\n");
     }
+}
+
+/* The function returns true if stack is empty, otherwise false */
+int emptyStack(struct sNode *top)
+{
+    return (top == NULL);
 }

@@ -46,41 +46,37 @@ void inOrder(bNode *tree)
     }
 }
 
-/* inorder tree traversal */
-void inOrder(bNode *root)
-{
-    /* set current to root of binary tree */
-    bNode *current = root;
-    sNode *s = NULL; /* Initialize stack s */
-    int done = 0;
-
-    while (!done)
+// Append a new element to the top of the stack
+void tpush(bNode *node, tStack **stack) 
+{   
+    tStack *new = (tStack*) malloc(sizeof(tStack)); 
+    if(new == NULL)
     {
-        /* Reach the left most bNode of the current bNode */
-        if(current != NULL) 
-        {
-            push(&s, current);											
-            current = current->left;
-        }
-        else 
-        {
-            if (!isEmpty(s)) 
-            {
-                current = pop(&s);
+        printf("Stack Overflow \n");
+        getchar();
+        exit(0);
+    }	
+    new -> treeNode = node; 
+    new -> next = *stack;  
+    (*stack) = new;  
+}
 
-                if (current->fact == VAR) 
-                {
-                    //reference current->infoN in the symboltable insert(current->infoN)
-                }
-
-                /* Visit right subtree */
-                current = current->right;
-            }
-            else
-                done = 1;
-        }
-    } /* end of while */
-}	
+// Remove element from the top of the stack
+bNode *tpop(tStack **stack) 
+{
+    if(*stack != NULL){
+        tStack *tempPtr = *stack;
+        bNode *res = tempPtr -> treeNode;
+        *stack = (*stack) -> next;
+        free(tempPtr);
+        return res;
+    }
+    else {
+        printf("The stack is empty.\n");
+        getchar();
+        exit(0);
+    }
+}
 
 /*int checkNode(bNode *tree)
 {
