@@ -23,7 +23,7 @@ list * pop(sNode **stack)
 {
     if(*stack != NULL){
         sNode *tempPtr = *stack;
-        info *res = tempPtr -> head;
+        list *res = tempPtr -> head;
         *stack = (*stack) -> next;
         free(tempPtr);
         return res;
@@ -39,7 +39,7 @@ list* top(sNode **stack)
 {
     if(*stack != NULL){
         sNode *tempPtr = *stack;
-        info *res = tempPtr -> head;
+        list *res = tempPtr -> head;
         return res;
     }
     else {
@@ -48,7 +48,7 @@ list* top(sNode **stack)
 }
 
 /* The function returns true if stack is empty, otherwise false */
-int emptyStack(struct sNode *top)
+int emptyStack(sNode *top)
 {
     return (top == NULL);
 }
