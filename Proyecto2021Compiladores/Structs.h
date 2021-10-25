@@ -4,15 +4,28 @@
 /*Definicion de tipos enumerados*/
 typedef enum tLabel
 {
-    METHOD,
-    STM,
-    LITERAL,
+    METHOD1,
+    METHOD2,
+    METHOD3,
+    METHOD4,
+    METHOD5,
+    METHOD6,
+    LISTMETHOD,
+    STM1,
+    STM2,
+    STM3,
+    LISTSTM,
+    LITERAL1,
+    LITERAL2,
     VAR,
+    LISTVAR,
     SUMA,
     MULT,
     RESTA,
     PROG,
-    BLOCK,
+    BLOCK1,
+    BLOCK2,
+    BLOCK3,
     PARAMETERS,
     IDENTIFICADOR,
     EXPR,
@@ -24,7 +37,10 @@ typedef enum tLabel
     IOR,
     IGUAL,
     MENOR,
-    MAYOR
+    MAYOR,
+    WHILE,
+    IF,
+    RETURN
 } t;
 
 typedef enum tType
