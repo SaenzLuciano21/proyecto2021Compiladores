@@ -35,6 +35,11 @@
 *.i*86
 *.x86_64
 *.hex
+calc-sintaxis.tab.c
+calc-sintaxis.tab.h
+lex.yy.c
+.vscode/
+
 
 # Debug files
 *.dSYM/
