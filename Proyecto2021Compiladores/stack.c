@@ -21,28 +21,32 @@ void push(list *lvl, sNode **stack)
 // Remove element from the top of the stack
 list * pop(sNode **stack) 
 {
-    if(*stack != NULL){
+    if(*stack != NULL)
+    {
         sNode *tempPtr = *stack;
         list *res = tempPtr -> head;
         *stack = (*stack) -> next;
         free(tempPtr);
         return res;
     }
-    else {
+    else 
+    {
         printf("The stack is empty.\n");
         getchar();
         exit(0);
     }
 }
 // Returns the current lvl 
-list* top(sNode **stack) 
+list * top(sNode **stack) 
 {
-    if(*stack != NULL){
+    if(*stack != NULL)
+    {
         sNode *tempPtr = *stack;
         list *res = tempPtr -> head;
         return res;
     }
-    else {
+    else 
+    {
         printf("The stack is empty.\n");
     }
 }

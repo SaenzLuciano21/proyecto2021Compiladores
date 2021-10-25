@@ -46,38 +46,6 @@ void inOrder(bNode *tree)
     }
 }
 
-// Append a new element to the top of the stack
-void tpush(bNode *node, tStack **stack) 
-{   
-    tStack *new = (tStack*) malloc(sizeof(tStack)); 
-    if(new == NULL)
-    {
-        printf("Stack Overflow \n");
-        getchar();
-        exit(0);
-    }	
-    new -> treeNode = node; 
-    new -> next = *stack;  
-    (*stack) = new;  
-}
-
-// Remove element from the top of the stack
-bNode *tpop(tStack **stack) 
-{
-    if(*stack != NULL){
-        tStack *tempPtr = *stack;
-        bNode *res = tempPtr -> treeNode;
-        *stack = (*stack) -> next;
-        free(tempPtr);
-        return res;
-    }
-    else {
-        printf("The stack is empty.\n");
-        getchar();
-        exit(0);
-    }
-}
-
 /*int checkNode(bNode *tree)
 {
     if (strcmp(tree->infoN->label, "SUMA") == 0)

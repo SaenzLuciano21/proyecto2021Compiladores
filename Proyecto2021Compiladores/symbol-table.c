@@ -37,62 +37,44 @@ int contains(list *plist, char *name)
     }
     return 0;
 }
-
-/* inorder tree traversal */
-void tableGen(bNode *root, sNode **symbolTable)
-{
-    /* set current to root of binary tree */
-    bNode *current = root;
-    sNode *s = NULL; /* Initialize stack s for tree traversal */
-    list *currentTableLevel = NULL;
-    int done = 0;
-    
-    while (!done)
-    {
-        /* Reach the left most bNode of the current bNode */
-        if(current != NULL) 
-        {
-            tpush(&s, current);											
-            current = current->left;
-        }
-        else 
-        {
-            if (!emptyStack(s)) 
-            {
-                current = tpop(&s);
-                enum tLabel currentLabel = current->fact;
-
-                if (currentLabel == VAR) 
-                {   
-                    if (currentLabel == BLOCK) 
-                    {   
-                        /*if (el metodo posee parametros) {
-                            list *paramLevel = (list *) malloc(sizeof(list));
-                            insert(parametros, &paramLevel); 
-                            push(paramLevel, symbolTable);
-                        } */
-
+/*
                         // gen method level y cargarlo antes de push
                         list *newlevel = NULL; 
                         currentTableLevel = newlevel;
-                        push(currentTableLevel, symbolTable);
-                    }
-                    /* if (se cierra el bloque) se hacen 2 pop (1 de param level otro del method level)
-                    pop(symbolTable); param level
-                    currentTableLevel = pop(symbolTable);  me tiene que devolver el tope del nivel que contiene al metodo */
-                    insert(currentLabel, currentTableLevel);
-                }
+                        push(currentTableLevel, symbolTable);*/
 
-                /* Visit right subtree */
-                current = current->right;
+void check(bNode *root, sNode **symbolTable) {
+    
+    /* seteamos current con la raiz del arbol */
+    bNode *current = root;
+    // nivel 0
+    list *newLevel;
+    if (current != NULL) {
+        // caso program
+        if (current == PROG) {  
+            // caso "base" donde generamos el primer nivel de la tabla y lo apilamos en la stack
+            newLevel = (list *) malloc(sizeof(list)); // inicializamos la lista que representa el nivel 0
+            push(newLevel, symbolTable);
+
+            // visitamos subarbol izq y luego el subarbol derecho
+            check(current->left, symbolTable);
+            check(current->right, symbolTable);
+            // no cerrar nivel, pues el nivel 0 es el que se mantiene
+        } else {
+            if (current == LISTVAR) { // si tenemos una lista de variables declaradas, vamos recorriendo e insertando
+                check(current->right, symbolTable); // la lista de declaraciones se extiende por la derecha
+                insert(current->left->infoN, &newLevel); // cada var se aloja en los hijos izq
+            } else {
+            
             }
-            else
-                done = 1;
         }
-    } /* end of while */
-}	
 
 
+    } // caso current == NULL
+    else {
+
+    }
+}
 
 
 
