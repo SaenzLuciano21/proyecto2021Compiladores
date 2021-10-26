@@ -4,19 +4,18 @@
 /*Definicion de tipos enumerados*/
 typedef enum tLabel
 {
-    METHOD1,
+    PMETHOD,
     METHOD2,
     METHOD3,
-    METHOD4,
-    METHOD5,
-    METHOD6,
+    CMETHOD,
+    CPMETHOD,
     LISTMETHOD,
     STM1,
     STM2,
     STM3,
     LISTSTM,
-    LITERAL1,
     LITERAL2,
+    LITERAL3,
     VAR,
     LISTVAR,
     SUMA,
@@ -52,6 +51,7 @@ typedef enum tType
 /*Estructura del nodo*/
 struct infoToken
 {
+    enum tLabel label;
     char *name;
     int value;
     int line;
