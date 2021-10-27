@@ -80,8 +80,6 @@ struct treeStack
 
 typedef struct treeStack tStack;
 
-#endif
-
 /* ------------------ List ------------------- */
 
 /* Estructura de la tabla de simbolos */
@@ -121,3 +119,4 @@ struct quaternary
 typedef struct quaternary tStack;
 
  
+#endif
