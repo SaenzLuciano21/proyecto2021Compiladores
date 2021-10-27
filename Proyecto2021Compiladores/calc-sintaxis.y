@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "tree.c"
+#include "Tree.c"
 
 struct bTree *ast;
 extern int yylineno;
@@ -173,13 +173,13 @@ statement: ID '=' expr ';'                      {   info *infS = (info *)malloc(
 | method_call ';'                               {   
                                                     $$ = create_bNode(STM2, NULL, $1, NULL, NULL); }
 | IF '(' expr ')' THEN block ELSE block         {   
-                                                    $$ = create_bNode(IF, NULL, $3, $6, $8); }
+                                                    $$ = create_bNode(IFTHENELSE, NULL, $3, $6, $8); }
 | WHILE '(' expr ')' block                      {   
-                                                    $$ = create_bNode(WHILE, NULL, $3, NULL, $5); }
+                                                    $$ = create_bNode(WHILELOOP, NULL, $3, NULL, $5); }
 | RETURN expr ';'                               {   
-                                                    $$ = create_bNode(RETURN, NULL, $2, NULL, NULL); }
+                                                    $$ = create_bNode(RETURN1, NULL, $2, NULL, NULL); }
 | RETURN ';'                                    {   
-                                                    $$ = create_bNode(RETURN, NULL, NULL, NULL, NULL); }
+                                                    $$ = create_bNode(RETURN2, NULL, NULL, NULL, NULL); }
 | ';'                                           {   
                                                     $$ = create_bNode(STM3, NULL, NULL, NULL, NULL); }
 | block                                         {   $$ = $1; }

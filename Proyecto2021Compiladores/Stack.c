@@ -60,12 +60,10 @@ int emptyStack(sNode *top)
 
 int insertStack(sNode **stack, info *inf)
 {
-    if (!containsList((*stack)->head, inf)) {
-        insertList(inf, (*stack)->head);
-        return 1;
-    } else {
-        return 0;
+    if (containsList((*stack)->head, inf->name) == 0) {
+        insertList(inf, &(*stack)->head);
     }
+    return 0;
 }
 
 int containsStack(sNode **stack, info *inf)

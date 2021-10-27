@@ -14,6 +14,7 @@ typedef enum tLabel
     STM2,
     STM3,
     LISTSTM,
+    LITERAL,
     LITERAL2,
     LITERAL3,
     VAR,
@@ -37,9 +38,10 @@ typedef enum tLabel
     IGUAL,
     MENOR,
     MAYOR,
-    WHILE,
-    IF,
-    RETURN
+    WHILELOOP,
+    IFTHENELSE,
+    RETURN1,
+    RETURN2
 } t;
 
 typedef enum tType
@@ -72,14 +74,6 @@ struct bTree
 /*Definicion del nombre del arbol*/
 typedef struct bTree bNode;
 
-struct treeStack
-{
-    struct bTree *treeNode;
-    struct treeStack *next;
-};
-
-typedef struct treeStack tStack;
-
 /* ------------------ List ------------------- */
 
 /* Estructura de la tabla de simbolos */
@@ -92,6 +86,8 @@ struct listNode
 /* Nodo para lista */
 typedef struct listNode list;
 
+int containsList(list *plist, char *name);
+void insertList(info *inf, list **l);
 
 /* ------------------ Stack para la tabla de simbolos ------------------- */
 
