@@ -1,42 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "tree.c"
+#include "List.c"
 
-/* Inserts a new element in the list */
-void insert(info *inf, list **l) 
-{   
-    /* checks memory availability */
-    list *new = (list*) malloc(sizeof(list)); 
-    if(new == NULL)
-    {
-        printf("Stack Overflow \n");
-        getchar();
-        exit(0);
-    }	
-    new -> infoN = inf; 
-    new -> next = *l;  
-    (*l) = new;  
-}
-
-/* checks if the st contains a given element */
-int contains(list *plist, char *name)
-{
-    if(plist != NULL)
-    {
-        list *aux = malloc(sizeof(list));
-        aux = plist;
-        while (aux != NULL)
-        {
-            if (strcmp(aux->infoN->name, name) == 0)
-            {
-                return 1;
-            }
-            aux = aux->next;
-        }
-    }
-    return 0;
-}
 /*
                         // gen method level y cargarlo antes de push
                         list *newlevel = NULL; 
@@ -99,7 +65,7 @@ sNode * check(bNode *root, sNode **symbolTable) {
         if (current->fact == PROG) {  
             // caso "base" donde generamos el primer nivel de la tabla y lo apilamos en la stack
             newLevel = (list *) malloc(sizeof(list)); // inicializamos la lista que representa el nivel 0
-            push(newLevel, symbolTable);
+            push(symbolTable);
 
             // visitamos subarbol izq y luego el subarbol derecho
             check(current->left, symbolTable);
@@ -129,13 +95,13 @@ sNode * check(bNode *root, sNode **symbolTable) {
         }
         if (current->fact == PARAMETERS) {
             list *paramLevel = (list *) malloc(sizeof(list));
-            push(paramLevel, symbolTable); // se pushea nivel nuevo
+            push(symbolTable); // se pushea nivel nuevo
             insert(current->infoN, &paramLevel); // aca estan los parametros
             check(current->right, symbolTable); // reviso si hay mas parametros
         }
         if (current->fact == BLOCK3) {
             list *blockLevel = (list *) malloc(sizeof(list));
-            push(blockLevel, symbolTable);
+            push(symbolTable);
             check(current->left, symbolTable);
             check(current->right, symbolTable);
         }
@@ -144,7 +110,6 @@ sNode * check(bNode *root, sNode **symbolTable) {
             check(current->right, symbolTable);
         }
     } else {  // caso current == NULL
-        return &symbolTable;
+        
     }
 }
-

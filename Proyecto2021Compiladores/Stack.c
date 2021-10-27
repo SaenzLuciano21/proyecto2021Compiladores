@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "Structs.h"
+#include "Structs.c"
 
 // Append a new element to the top of the stack
-void push(list *lvl, sNode **stack) 
+/*void push(list *lvl, sNode **stack) 
 {   
     sNode *new = (sNode*) malloc(sizeof(sNode)); 
     if(new == NULL)
@@ -14,6 +14,21 @@ void push(list *lvl, sNode **stack)
         exit(0);
     }	
     new -> head = lvl; 
+    new -> next = *stack;  
+    (*stack) = new;  
+}*/
+
+void push(sNode **stack) 
+{   
+    list *l = (list*) malloc(sizeof(list));
+    sNode *new = (sNode*) malloc(sizeof(sNode)); 
+    if(new == NULL)
+    {
+        printf("Stack Overflow \n");
+        getchar();
+        exit(0);
+    }	
+    new -> head = l; 
     new -> next = *stack;  
     (*stack) = new;  
 }
@@ -55,4 +70,9 @@ list * top(sNode **stack)
 int emptyStack(sNode *top)
 {
     return (top == NULL);
+}
+
+int insertStack(sNode **stack)
+{
+    
 }

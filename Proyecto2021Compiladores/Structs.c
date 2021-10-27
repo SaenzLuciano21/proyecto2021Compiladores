@@ -51,7 +51,7 @@ typedef enum tType
 /*Estructura del nodo*/
 struct infoToken
 {
-    enum tLabel label;
+    enum tLabel flag;
     char *name;
     int value;
     int line;
@@ -106,6 +106,18 @@ struct stackNode
 
 typedef struct stackNode sNode;
 
+/* ------------------ Estructura para el codigo de tres direcciones ------------------- */
 
+/* Estructura TAC */
+struct quaternary
+{
+    enum tLabel op;
+    info *arg1;
+    info *arg2;
+    info *result;
+    struct quaternary *next;
+};
+
+typedef struct quaternary tStack;
 
  
