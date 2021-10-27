@@ -4,20 +4,6 @@
 #include "Structs.c"
 
 // Append a new element to the top of the stack
-/*void push(list *lvl, sNode **stack) 
-{   
-    sNode *new = (sNode*) malloc(sizeof(sNode)); 
-    if(new == NULL)
-    {
-        printf("Stack Overflow \n");
-        getchar();
-        exit(0);
-    }	
-    new -> head = lvl; 
-    new -> next = *stack;  
-    (*stack) = new;  
-}*/
-
 void push(sNode **stack) 
 {   
     list *l = (list*) malloc(sizeof(list));
@@ -72,7 +58,28 @@ int emptyStack(sNode *top)
     return (top == NULL);
 }
 
-int insertStack(sNode **stack)
+int insertStack(sNode **stack, info *inf)
 {
-    
+    if (!containsList((*stack)->head, inf)) {
+        insertList(inf, (*stack)->head);
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int containsStack(sNode **stack, info *inf)
+{
+    sNode **s = stack;
+    if (stack != NULL) {
+        if (!containsList((*s)->head, inf->name)) {
+            pop(s); 
+            containsStack(s, inf);  /*nivel anterior de s*/
+        } else {
+            return 1;
+        }
+    } else {
+        return 0;
+    }
+
 }

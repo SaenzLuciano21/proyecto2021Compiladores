@@ -4,7 +4,7 @@
 #include "Tree.c"
 
 /* Inserts a new element in the list */
-void insert(info *inf, list **l) 
+void insertList(info *inf, list **l) 
 {   
     /* checks memory availability */
     list *new = (list*) malloc(sizeof(list)); 
@@ -20,7 +20,7 @@ void insert(info *inf, list **l)
 }
 
 /* checks if the st contains a given element */
-int contains(list *plist, char *name)
+int containsList(list *plist, char *name)
 {
     if(plist != NULL)
     {
