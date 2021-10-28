@@ -86,9 +86,6 @@ struct listNode
 /* Nodo para lista */
 typedef struct listNode list;
 
-int containsList(list *plist, char *name);
-void insertList(info *inf, list **l);
-
 /* ------------------ Stack para la tabla de simbolos ------------------- */
 
 /* Estructura de la pila */
