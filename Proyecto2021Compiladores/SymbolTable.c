@@ -22,13 +22,25 @@ void tableGen(bNode *root, sNode **symbolTable) {
             tableGen(current->left, symbolTable); // recorro los var que se encuentran en los hijos izq
             tableGen(current->right, symbolTable); // la lista de declaraciones se extiende por la derecha
         }
-        if (current->fact == VAR) { // OJO!!! que pasa con newLevel si hay un var en block???
+        if (current->fact == VAR) {
             insertStack(symbolTable, current->infoN);
-            tableGen(current->left, symbolTable);
+            tableGen(current->left, symbolTable);   //aca estan los ID
         }
         if (current->fact == IDENTIFICADOR) {
-            insertStack(symbolTable, current->infoN);
-            tableGen(current->left, symbolTable);
+            if (containsList((*symbolTable)->head, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+                tableGen(current->left, symbolTable);   //verifico si hay mas ID
+            } else {
+                // Retornar un mensaje y salir
+            }
+        }
+        if (current->fact == IDENTIFICADOR2) {
+            if (containsStack(symbolTable, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+                tableGen(current->left, symbolTable);   //verifico si hay mas ID
+            } else {
+                // Retornar un mensaje y salir
+            }
         }
         if (current->fact == LISTMETHOD) { //recorro lista de metodos
             tableGen(current->left, symbolTable);
@@ -39,12 +51,20 @@ void tableGen(bNode *root, sNode **symbolTable) {
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
         }
+        if (current->fact == PMETHODE) {
+            insertStack(symbolTable, current->infoN);
+            tableGen(current->left, symbolTable);
+        }
+        if (current->fact == METHOD) {
+            insertStack(symbolTable, current->infoN);
+            tableGen(current->right, symbolTable);
+        }
         if (current->fact == PARAMETERS) {
             push(symbolTable); // se pushea nivel nuevo
             insertStack(symbolTable, current->infoN); // aca estan los parametros
             tableGen(current->right, symbolTable); // reviso si hay mas parametros
         }
-        if (current->fact == BLOCK3) {
+        if (current->fact == BLOCK3) {  //el unico caso que me interesa meter en la ST
             push(symbolTable);
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
@@ -52,6 +72,104 @@ void tableGen(bNode *root, sNode **symbolTable) {
         if (current->fact == LISTSTM) {
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
+        }
+        if (current->fact == STM1) {
+            if (containsStack(symbolTable, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+                tableGen(current->right, symbolTable);
+            } else {
+                //Retornar un mensaje y salir
+            }
+        }
+        if (current->fact == STM2) {
+            tableGen(current->left, symbolTable);
+        }
+        if (current->fact == IFTHENELSE) {
+            // Debo chequear la condicion del IF para saber si entro por current->middle o current->right???
+            tableGen(current->left, symbolTable);
+            tableGen(current->middle, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == WHILELOOP) {
+            //Tengo que ver que hago con la condicion del While???
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == RETURN1)
+        {
+             tableGen(current->left, symbolTable);
+        }
+        if (current->fact == CMETHOD) {
+            if (containsStack(symbolTable, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+            } else {
+                // Retornar un mensaje y salir
+            }
+        }
+        if (containsStack(symbolTable, current->infoN) == 0) {
+            insertStack(symbolTable, current->infoN);
+            tableGen(current->left, symbolTable);   //verifico si hay mas ID
+        } else {
+                // Retornar un mensaje y salir
+        }
+        if (current->fact == EXPR) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == SUMA) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == RESTA) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == MULT) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == DIV) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == PORC) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == CONJUNCION) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == DISYUNCION) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == IGUAL) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == MENOR) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == MAYOR) {
+            tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);
+        }
+        if (current->fact == NEGACION) {
+            tableGen(current->left, symbolTable);
+        }
+        if (current->fact == NEGATIVO) {
+            tableGen(current->left, symbolTable);
+        }
+        if (current->fact == LITERAL) {
+            insertStack(symbolTable, current->infoN);
+        }
+        if (current->fact == LITERAL2) {
+            insertStack(symbolTable, current->infoN);
+        }
+        if (current->fact == LITERAL3) {
+            insertStack(symbolTable, current->infoN);
         }
     } else {  // caso current == NULL
         

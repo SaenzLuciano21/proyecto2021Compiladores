@@ -58,26 +58,22 @@ int emptyStack(sNode *top)
     return (top == NULL);
 }
 
-int insertStack(sNode **stack, info *inf)
+void insertStack(sNode **stack, info *inf)
 {
-    if (containsList((*stack)->head, inf->name) == 0) {
-        insertList(inf, &(*stack)->head);
-    }
-    return 0;
+    insertList(&(*stack)->head, inf);
 }
 
 int containsStack(sNode **stack, info *inf)
 {
-    sNode **s = stack;
+    sNode **aux = stack;
     if (stack != NULL) {
-        if (!containsList((*s)->head, inf->name)) {
-            pop(s); 
-            containsStack(s, inf);  /*nivel anterior de s*/
+        if (!containsList((*aux)->head, inf->name)) {
+            pop(aux); 
+            containsStack(aux, inf);  /*nivel anterior de s*/
         } else {
             return 1;
         }
-    } else {
-        return 0;
     }
+    return 0;
 
 }
