@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "Structs.c"
+#include "List.c"
 
 // Append a new element to the top of the stack
 void push(sNode **stack) 

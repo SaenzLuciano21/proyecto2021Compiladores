@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "List.c"
+#include "Stack.c"
 
 void tableGen(bNode *root, sNode **symbolTable) {
     
