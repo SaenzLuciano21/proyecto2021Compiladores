@@ -31,7 +31,8 @@ void tableGen(bNode *root, sNode **symbolTable) {
                 insertStack(symbolTable, current->infoN);
                 tableGen(current->left, symbolTable);   //verifico si hay mas ID
             } else {
-                // Retornar un mensaje y salir
+                printf("Variable ya declarada en el ambiente actual \n");
+                exit(0);
             }
         }
         if (current->fact == IDENTIFICADOR2) {
@@ -39,7 +40,8 @@ void tableGen(bNode *root, sNode **symbolTable) {
                 insertStack(symbolTable, current->infoN);
                 tableGen(current->left, symbolTable);   //verifico si hay mas ID
             } else {
-                // Retornar un mensaje y salir
+                printf("Variable no declarada \n");
+                exit(0);            
             }
         }
         if (current->fact == LISTMETHOD) { //recorro lista de metodos
@@ -47,19 +49,35 @@ void tableGen(bNode *root, sNode **symbolTable) {
             tableGen(current->right, symbolTable);
         }
         if (current->fact == PMETHOD) {
-            insertStack(symbolTable, current->infoN);
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
+            if (containsStack(symbolTable, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+                tableGen(current->left, symbolTable);
+                tableGen(current->right, symbolTable);
+            } else {
+                printf("Metodo ya declarado \n");
+                exit(0); 
+            }
         }
         if (current->fact == PMETHODE) {
-            insertStack(symbolTable, current->infoN);
-            tableGen(current->left, symbolTable);
+            if (containsStack(symbolTable, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+                tableGen(current->left, symbolTable);
+            } else {
+                printf("Metodo ya declarado \n");
+                exit(0); 
+            }
         }
         if (current->fact == METHOD) {
-            insertStack(symbolTable, current->infoN);
-            tableGen(current->right, symbolTable);
+            if (containsStack(symbolTable, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+                tableGen(current->right, symbolTable);
+            } else {
+                printf("Metodo ya declarado \n");
+                exit(0); 
+            }
         }
-        if (current->fact == PARAMETERS) {
+        // Revisar el caso de declaracion de variables con un ID igual que los parametros
+        if (current->fact == PARAMETERS) { 
             push(symbolTable); // se pushea nivel nuevo
             insertStack(symbolTable, current->infoN); // aca estan los parametros
             tableGen(current->right, symbolTable); // reviso si hay mas parametros
@@ -68,6 +86,7 @@ void tableGen(bNode *root, sNode **symbolTable) {
             push(symbolTable);
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
+            pop(symbolTable);
         }
         if (current->fact == LISTSTM) {
             tableGen(current->left, symbolTable);
@@ -78,81 +97,49 @@ void tableGen(bNode *root, sNode **symbolTable) {
                 insertStack(symbolTable, current->infoN);
                 tableGen(current->right, symbolTable);
             } else {
-                //Retornar un mensaje y salir
+                printf("Variable no declarada \n");
+                exit(0); 
             }
         }
         if (current->fact == STM2) {
             tableGen(current->left, symbolTable);
         }
         if (current->fact == IFTHENELSE) {
-            // Debo chequear la condicion del IF para saber si entro por current->middle o current->right???
             tableGen(current->left, symbolTable);
             tableGen(current->middle, symbolTable);
             tableGen(current->right, symbolTable);
         }
         if (current->fact == WHILELOOP) {
-            //Tengo que ver que hago con la condicion del While???
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
         }
-        if (current->fact == RETURN1)
-        {
+        if (current->fact == RETURN1) {
              tableGen(current->left, symbolTable);
         }
         if (current->fact == CMETHOD) {
             if (containsStack(symbolTable, current->infoN) == 0) {
                 insertStack(symbolTable, current->infoN);
             } else {
-                // Retornar un mensaje y salir
+                printf("Metodo no declarado \n");
+                exit(0);
             }
         }
-        if (containsStack(symbolTable, current->infoN) == 0) {
-            insertStack(symbolTable, current->infoN);
-            tableGen(current->left, symbolTable);   //verifico si hay mas ID
-        } else {
-                // Retornar un mensaje y salir
+        if (current->fact == CPMETHOD) {
+            if (containsStack(symbolTable, current->infoN) == 0) {
+                insertStack(symbolTable, current->infoN);
+                tableGen(current->left, symbolTable);   //verifico si hay mas ID
+            } else {
+                printf("Metodo no declarado \n");
+                exit(0);
+            }
         }
-        if (current->fact == EXPR) {
+        if (current->fact == LISTEXPR) {
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
         }
-        if (current->fact == SUMA) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == RESTA) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == MULT) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == DIV) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == PORC) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == CONJUNCION) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == DISYUNCION) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == IGUAL) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == MENOR) {
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
-        }
-        if (current->fact == MAYOR) {
+        if (current->fact == SUMA || current->fact == RESTA || current->fact == MULT || current->fact == DIV
+            || current->fact == MENOR || current->fact == MAYOR) {
+            // aca va typeCheck()
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
         }
@@ -175,6 +162,11 @@ void tableGen(bNode *root, sNode **symbolTable) {
         
     }
 }
+
+void typeCheck(bNode *exp) {
+
+}
+
 
 /*int checkNode(bNode *tree)
 {

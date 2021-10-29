@@ -199,7 +199,7 @@ method_call: ID '(' ')'                         {   info *infM = (info *)malloc(
 
 list_expr: expr                                 {   $$ = $1; }
 | expr ',' list_expr                            {   
-                                                    $$ = create_bNode(EXPR, NULL, $1, NULL, $3); }
+                                                    $$ = create_bNode(LISTEXPR, NULL, $1, NULL, $3); }
 ;
 
 expr: ID                                        {   info *infI = (info *)malloc(sizeof(info));

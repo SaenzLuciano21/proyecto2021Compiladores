@@ -30,7 +30,7 @@ typedef enum tLabel
     PARAMETERS,
     IDENTIFICADOR,
     IDENTIFICADOR2,
-    EXPR,
+    LISTEXPR,
     NEGACION,
     NEGATIVO,
     PORC,
