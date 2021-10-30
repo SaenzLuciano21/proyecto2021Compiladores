@@ -81,6 +81,7 @@ void tableGen(bNode *root, sNode **symbolTable) {
             push(symbolTable); // se pushea nivel nuevo
             insertStack(symbolTable, current->infoN); // aca estan los parametros
             tableGen(current->right, symbolTable); // reviso si hay mas parametros
+            pop(symbolTable);
         }
         if (current->fact == BLOCK3) {  //el unico caso que me interesa meter en la ST
             push(symbolTable);
@@ -137,35 +138,71 @@ void tableGen(bNode *root, sNode **symbolTable) {
             tableGen(current->left, symbolTable);
             tableGen(current->right, symbolTable);
         }
+        // semantica enteros
         if (current->fact == SUMA || current->fact == RESTA || current->fact == MULT || current->fact == DIV
-            || current->fact == MENOR || current->fact == MAYOR) {
-            // aca va typeCheck()
-            tableGen(current->left, symbolTable);
-            tableGen(current->right, symbolTable);
+            || current->fact == MENOR || current->fact == MAYOR || current->fact == NEGATIVO) {
+            if (!intCheck(current)) { // Chequeo de tipos para enteros
+                printf("Error de tipos, se espera: INT 'op' INT \n");
+                getchar();
+                exit(0);
+            }
+            // ???? hace falta seguir recursionando? creo que estamos en las hojas ya
+            /*tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);*/
         }
-        if (current->fact == NEGACION) {
-            tableGen(current->left, symbolTable);
+        // semantica booleanos
+        if (current->fact == CONJUNCION || current->fact == DISYUNCION || current->fact == NEGACION) {
+            if (!boolCheck(current)) { // Chequeo de tipos para booleanos
+                printf("Error de tipos, se espera: BOOL 'op' BOOL \n");
+                getchar();
+                exit(0);
+            }
+            // ???? hace falta seguir recursionando? creo que estamos en las hojas ya
+            /*tableGen(current->left, symbolTable);
+            tableGen(current->right, symbolTable);*/
         }
-        if (current->fact == NEGATIVO) {
-            tableGen(current->left, symbolTable);
-        }
-        if (current->fact == LITERAL) {
-            insertStack(symbolTable, current->infoN);
-        }
-        if (current->fact == LITERAL2) {
-            insertStack(symbolTable, current->infoN);
-        }
-        if (current->fact == LITERAL3) {
-            insertStack(symbolTable, current->infoN);
+        // asi deberian ser los dos casos anteriores, sin las recursiones
+        if (current->fact == IGUAL && !equalsCheck(current)) {
+                printf("Error de tipos, se espera: BOOL 'op' BOOL o INT 'op' INT \n");
+                getchar();
+                exit(0);
         }
     } else {  // caso current == NULL
         
     }
 }
 
-void typeCheck(bNode *exp) {
-
+// Chequeo de tipos para enteros
+int intCheck(bNode *exp) {
+    if (exp->fact == SUMA || exp->fact == RESTA || exp->fact == MULT || exp->fact == PORC ||
+    exp->fact == DIV || exp->fact == MENOR || exp->fact == MAYOR) {
+        return (intCheck(exp->right) == intCheck(exp->left));      
+    }else {
+        if (exp->fact == NEGATIVO) {
+            return intCheck(exp->left);
+        } else {
+            return (exp->fact == LITERAL);
+        }
+    }
 }
+
+int boolCheck(bNode *exp) {
+    if (exp->fact == CONJUNCION || exp->fact == DISYUNCION) {
+        return (boolCheck(exp->right) == boolCheck(exp->left));      
+    } else {
+        if (exp->fact == NEGACION) {
+            return boolCheck(exp->left);
+        } else {
+            return (exp->fact == LITERAL2 || exp->fact == LITERAL3);
+        }
+    }
+}
+
+int equalsCheck(bNode *expr) {
+    return ((intCheck(expr->left) && intCheck(expr->right)) || 
+    (boolCheck(expr->left) && boolCheck(expr->right)));
+}
+
 
 
 /*int checkNode(bNode *tree)
