@@ -52,6 +52,38 @@ typedef enum tType
     integer
 } tV;
 
+typedef enum tThreeAddress
+{
+    IC_BEGIN,
+    IC_END,
+    IC_ADD,
+    IC_SUB,
+    IC_PLUS,
+    IC_DIV,
+    IC_MOD,
+    IC_AND,
+    IC_OR,
+    IC_NOT,
+    IC_EQUALAR,
+    IC_EQUALLOG,
+    IC_NEG,
+    IC_MINOR,
+    IC_MAJOR,
+    IC_ASSING,
+    IC_IF,
+    IC_WHILE,
+    IC_LABEL,
+    IC_JUMP,
+    IC_RETINT,
+    IC_RETBOOL,
+    IC_RETVOID,
+    IC_PPARAM,
+    IC_CALL,
+    IC_LOAD,
+    IC_BEGIN_FUNCTION,
+    IC_END_FUNCTION
+}tTDC;
+
 /*Estructura del nodo*/
 struct infoToken
 {
