@@ -57,12 +57,12 @@ typedef enum tTAC
 {
     BEGIN_PROG,
     END_PROG,
-    SUMA,
-    RESTA,
-    MULT,
+    SUM,
+    RES,
+    MUL,
     BEGIN_FUNCTION,
     END_FUNCTION
-};
+} tT;
 
 /*Estructura del nodo*/
 struct infoToken
