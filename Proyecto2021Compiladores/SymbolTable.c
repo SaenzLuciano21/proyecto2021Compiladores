@@ -76,18 +76,14 @@ void tableGen(bNode *root, sNode **symbolTable) {
                 exit(0); 
             }
         }
-        // Revisar el caso de declaracion de variables con un ID igual que los parametros
-        if (current->fact == PARAMETERS) { 
-            
-            // REVISAR ----------------
-            /*la parte del arbol que modela los parametros no diferencia entre parametros
-            del mismo metodo y parametros de otro, al usarse por ej (parameters, parameters, parameters)
-            se está realizando un push de 1 parametro por nivel y me quedan 3 niveles para el ejemplo anterior*/
-
+        if (current->fact == LISTPARAM) {
             push(symbolTable); // se pushea nivel nuevo
-            insertStack(symbolTable, current->infoN); // aca estan los parametros
-            tableGen(current->right, symbolTable); // reviso si hay mas parametros
+            tableGen(symbolTable, current->left);
             pop(symbolTable);
+        }
+        if (current->fact == PARAMETERS) {
+            insertStack(symbolTable, current->infoN); // aca estan los parametros
+            tableGen(symbolTable, current->right);
         }
         if (current->fact == BLOCK3) {  //el unico caso que me interesa meter en la ST
             push(symbolTable);

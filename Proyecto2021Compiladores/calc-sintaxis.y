@@ -26,6 +26,7 @@ extern int yylineno;
 %type<p> prog
 %type<p> list_method_decl
 %type<p> method_decl
+%type<p> list_parameters
 %type<p> parameters
 %type<p> block
 %type<p> list_var_decl
@@ -66,6 +67,9 @@ list_method_decl: method_decl                       {   $$ = $1; }
                                                         $$ = create_bNode(LISTMETHOD, NULL, $1, NULL, $2); }
 ;
 
+list_parameters: parameters                         { $$ = create_bNode(LISTPARAM, NULL, $1, NULL, NULL); }
+;
+
 parameters: type ID                                 {   info *infP = (info *)malloc(sizeof(info));
                                                         infP->flag = PARAMETERS;
                                                         infP->name = $2;
@@ -80,27 +84,27 @@ parameters: type ID                                 {   info *infP = (info *)mal
                                                         $$ = create_bNode(PARAMETERS, infP, NULL, NULL, $4); }
 ;
 
-method_decl: type ID '(' parameters')' block    {   info *infM = (info *)malloc(sizeof(info));
+method_decl: type ID '(' list_parameters')' block    {   info *infM = (info *)malloc(sizeof(info));
                                                     infM->flag = PMETHOD;
                                                     infM->name = $2;
                                                     infM->type = (enum tType)$1;
                                                     infM->line = yylineno;
                                                     $$ = create_bNode(PMETHOD, infM, $4, NULL, $6); }
 
-| type ID '(' parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
+| type ID '(' list_parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
                                                     infM->flag = PMETHODE;
                                                     infM->name = $2;
                                                     infM->type = (enum tType)$1;
                                                     infM->line = yylineno;
                                                     $$ = create_bNode(PMETHODE, infM, $4, NULL, NULL); }
 
-| VOID ID '(' parameters')' block               {   info *infM = (info *)malloc(sizeof(info));
+| VOID ID '(' list_parameters')' block               {   info *infM = (info *)malloc(sizeof(info));
                                                     infM->flag = PMETHOD;
                                                     infM->name = $2;
                                                     infM->line = yylineno;
                                                     $$ = create_bNode(PMETHOD, infM, $4, NULL, $6); }
 
-| VOID ID '(' parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
+| VOID ID '(' list_parameters')' EXTERN ';'          {   info *infM = (info *)malloc(sizeof(info));
                                                     infM->flag = PMETHODE;
                                                     infM->name = $2;
                                                     infM->line = yylineno;
