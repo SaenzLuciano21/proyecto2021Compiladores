@@ -76,14 +76,12 @@ void tableGen(bNode *root, sNode **symbolTable) {
                 exit(0); 
             }
         }
-        if (current->fact == LISTPARAM) {
+        // Revisar el caso de declaracion de variables con un ID igual que los parametros
+        if (current->fact == PARAMETERS) { 
             push(symbolTable); // se pushea nivel nuevo
-            tableGen(symbolTable, current->left);
-            pop(symbolTable);
-        }
-        if (current->fact == PARAMETERS) {
             insertStack(symbolTable, current->infoN); // aca estan los parametros
-            tableGen(symbolTable, current->right);
+            tableGen(current->right, symbolTable); // reviso si hay mas parametros
+            pop(symbolTable);
         }
         if (current->fact == BLOCK3) {  //el unico caso que me interesa meter en la ST
             push(symbolTable);
@@ -205,25 +203,46 @@ int equalsCheck(bNode *expr) {
     (boolCheck(expr->left) && boolCheck(expr->right)));
 }
 
-int methodCheck(bNode *mthExpr, sNode **symbolTable) {
+// todo void, pues si falla algo sale con exit(0)
+
+void methodCheck(bNode *mthExpr, sNode **symbolTable) {
     // chequeamos si tiene parametros
     if (mthExpr->fact == CPMETHOD) {
         // invocamos paramCounter con el hijo izq, que es donde tenemos la list_expr
-        int cantActualParam = paramCounter(mthExpr->left);
-        list *searchLevel = containsStack(symbolTable, mthExpr->infoN);
-        int cantFormalParam = listLength(searchLevel);
-        /* contando cantidad de parametros actuales y formales para ver 
-        si coincide la cantidad declarada con la cantidad invocada */
+        list *formalParam = containsStack(symbolTable, mthExpr->infoN);
+        paramCheck(mthExpr->left, formalParam);
     }
 }
 
-int paramCounter(bNode *listExpr) {
-    bNode *aux = listExpr;
-    int counter = 0;
-    // contar cantidad de expresiones
-    while (listExpr != NULL) {
-        counter++;
-        aux = aux->right;
+void paramCheck(bNode *currentp, list *formalp) {
+    bNode *auxcp = currentp;
+    list *auxf = formalp;
+    int currentCount = 0;
+    int formalCount = 0;
+    enum tType ctype;
+    enum tType ftype;
+
+    // recorremos ambas estructuras y vamos chequeando los tipos y luego consistencia en cantidad
+    while (auxcp != NULL || auxf != NULL) {
+        if (auxcp != NULL) {
+            currentCount++;
+            ctype = auxcp->infoN->type; 
+            auxcp = auxcp->right;
+        }
+        if (auxf != NULL) {
+            formalCount++;
+            ftype = auxf->infoN->type;
+            auxf = auxf->next;
+        }
+        if (ctype != ftype) {
+            printf("Inconsistencia de tipos entre parametros formales y parametros actuales \n");
+            getchar();
+            exit(0);
+        }
     }
-    return counter;
+    if (currentCount != formalCount) {
+        printf("El numero de parametros actuales difiere del numero de parametros formales \n");
+        getchar();
+        exit(0);
+    }
 }
