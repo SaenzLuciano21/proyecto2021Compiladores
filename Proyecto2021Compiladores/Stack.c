@@ -52,6 +52,20 @@ list * top(sNode **stack)
     }
 }
 
+sNode * upLevel(sNode **stack) 
+{
+    if(*stack != NULL)
+    {
+        return (*stack) -> next;
+    }
+    else 
+    {
+        printf("The stack is empty.\n");
+        getchar();
+        exit(0);
+    }
+}
+
 /* The function returns true if stack is empty, otherwise false */
 int emptyStack(sNode *top)
 {
@@ -63,17 +77,16 @@ void insertStack(sNode **stack, info *inf)
     insertList(&(*stack)->head, inf);
 }
 
-int containsStack(sNode **stack, info *inf)
+list * containsStack(sNode **stack, info *inf)
 {
     sNode **aux = stack;
     if (stack != NULL) {
-        if (!containsList((*aux)->head, inf->name)) {
-            pop(aux); 
-            containsStack(aux, inf);  /*nivel anterior de s*/
+        if (!containsList((*aux)->head, inf)) {
+            containsStack(upLevel(aux), inf);  // llamamos recursivamente con un nivel anterior
         } else {
-            return 1;
+            return (*aux)->head;
         }
     }
-    return 0;
-
+    // revisar si podemos devolver NULL, O 0
+    return NULL;
 }

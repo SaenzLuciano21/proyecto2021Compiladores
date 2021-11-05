@@ -78,6 +78,12 @@ void tableGen(bNode *root, sNode **symbolTable) {
         }
         // Revisar el caso de declaracion de variables con un ID igual que los parametros
         if (current->fact == PARAMETERS) { 
+            
+            // REVISAR ----------------
+            /*la parte del arbol que modela los parametros no diferencia entre parametros
+            del mismo metodo y parametros de otro, al usarse por ej (parameters, parameters, parameters)
+            se está realizando un push de 1 parametro por nivel y me quedan 3 niveles para el ejemplo anterior*/
+
             push(symbolTable); // se pushea nivel nuevo
             insertStack(symbolTable, current->infoN); // aca estan los parametros
             tableGen(current->right, symbolTable); // reviso si hay mas parametros
@@ -115,7 +121,7 @@ void tableGen(bNode *root, sNode **symbolTable) {
             tableGen(current->right, symbolTable);
         }
         if (current->fact == RETURN1) {
-             tableGen(current->left, symbolTable);
+            tableGen(current->left, symbolTable);
         }
         if (current->fact == CMETHOD) {
             if (containsStack(symbolTable, current->infoN) == 0) {
@@ -186,14 +192,14 @@ int intCheck(bNode *exp) {
     }
 }
 
-int boolCheck(bNode *exp) {
-    if (exp->fact == CONJUNCION || exp->fact == DISYUNCION) {
-        return (boolCheck(exp->right) == boolCheck(exp->left));      
+int boolCheck(bNode *expr) {
+    if (expr->fact == CONJUNCION || expr->fact == DISYUNCION) {
+        return (boolCheck(expr->right) == boolCheck(expr->left));      
     } else {
-        if (exp->fact == NEGACION) {
-            return boolCheck(exp->left);
+        if (expr->fact == NEGACION) {
+            return boolCheck(expr->left);
         } else {
-            return (exp->fact == LITERAL2 || exp->fact == LITERAL3);
+            return (expr->fact == LITERAL2 || expr->fact == LITERAL3);
         }
     }
 }
@@ -201,4 +207,27 @@ int boolCheck(bNode *exp) {
 int equalsCheck(bNode *expr) {
     return ((intCheck(expr->left) && intCheck(expr->right)) || 
     (boolCheck(expr->left) && boolCheck(expr->right)));
+}
+
+int methodCheck(bNode *mthExpr, sNode **symbolTable) {
+    // chequeamos si tiene parametros
+    if (mthExpr->fact == CPMETHOD) {
+        // invocamos paramCounter con el hijo izq, que es donde tenemos la list_expr
+        int cantActualParam = paramCounter(mthExpr->left);
+        list *searchLevel = containsStack(symbolTable, mthExpr->infoN);
+        int cantFormalParam = listLength(searchLevel);
+        /* contando cantidad de parametros actuales y formales para ver 
+        si coincide la cantidad declarada con la cantidad invocada */
+    }
+}
+
+int paramCounter(bNode *listExpr) {
+    bNode *aux = listExpr;
+    int counter = 0;
+    // contar cantidad de expresiones
+    while (listExpr != NULL) {
+        counter++;
+        aux = aux->right;
+    }
+    return counter;
 }

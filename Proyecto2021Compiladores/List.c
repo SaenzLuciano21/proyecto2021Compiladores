@@ -38,4 +38,17 @@ int containsList(list *plist, info *inf)
     return 0;
 }
 
+/* necesito que ademas de contarme la cantidad de parametros del nivel
+chequee que los tipos de cada parametro sean consistentes, es decir que coincidan. Si encuentra 1 parametro
+con tipo diferente getchar(); exit(0);*/
+int listLength(list *plist) {
+    int counter = 0;
+    list *aux = plist;
+    while (aux != NULL) {
+        counter++;
+        aux = aux->next;
+    }
+    return counter;
+}
+
 
