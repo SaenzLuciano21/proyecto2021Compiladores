@@ -76,12 +76,15 @@ void tableGen(bNode *root, sNode **symbolTable) {
                 exit(0); 
             }
         }
-        // Revisar el caso de declaracion de variables con un ID igual que los parametros
+        if (current->fact == LISTPARAM) {
+            push(symbolTable);
+            tableGen(current->left, symbolTable);
+            pop(symbolTable);
+        }
         if (current->fact == PARAMETERS) { 
-            push(symbolTable); // se pushea nivel nuevo
             insertStack(symbolTable, current->infoN); // aca estan los parametros
             tableGen(current->right, symbolTable); // reviso si hay mas parametros
-            pop(symbolTable);
+            
         }
         if (current->fact == BLOCK3) {  //el unico caso que me interesa meter en la ST
             push(symbolTable);
