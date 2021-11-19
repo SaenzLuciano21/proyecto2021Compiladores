@@ -20,22 +20,19 @@ void insertList(list **l, info *inf)
 }
 
 /* checks if the st contains a given element */
-int containsList(list *plist, info *inf)
-{
-    if(plist != NULL)
+list * containsList(list *plist, info *inf)
+{   
+    list *index = plist;
+    while (index != NULL)
     {
-        list *aux = malloc(sizeof(list));
-        aux = plist;
-        while (aux != NULL)
+        if (strcmp(index->infoN->name, inf->name) == 0)
         {
-            if (strcmp(aux->infoN->name, inf->name) == 0)
-            {
-                return 1;
-            }
-            aux = aux->next;
+            return index;
         }
+        index = index->next;
     }
-    return 0;
+    
+    return NULL;
 }
 
 /* necesito que ademas de contarme la cantidad de parametros del nivel

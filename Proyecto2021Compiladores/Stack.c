@@ -77,14 +77,17 @@ void insertStack(sNode **stack, info *inf)
     insertList(&(*stack)->head, inf);
 }
 
+// retorna el nodo del identificador
 list * containsStack(sNode **stack, info *inf)
 {
     sNode **aux = stack;
     if (stack != NULL) {
-        if (!containsList((*aux)->head, inf)) {
+        // capturo el nodo que me devuelve containsList()
+        list *result = containsList((*aux)->head, inf);
+        if (result == NULL) {
             containsStack(upLevel(aux), inf);  // llamamos recursivamente con un nivel anterior
         } else {
-            return (*aux)->head;
+            return result;
         }
     }
     // revisar si podemos devolver NULL, O 0
