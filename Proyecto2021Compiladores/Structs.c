@@ -44,7 +44,8 @@ typedef enum tLabel
     WHILELOOP,
     IFTHENELSE,
     RETURN1,
-    RETURN2
+    RETURN2,
+    PARENTESIS
 } t;
 
 typedef enum tType
@@ -61,7 +62,12 @@ typedef enum tTAC
     RES,
     MUL,
     BEGIN_FUNCTION,
-    END_FUNCTION
+    END_FUNCTION,
+    ASSIG,
+    CALL_F,
+    LOAD_PARAM,
+    RET,
+    PARENT
 } tT;
 
 /*Estructura del nodo*/

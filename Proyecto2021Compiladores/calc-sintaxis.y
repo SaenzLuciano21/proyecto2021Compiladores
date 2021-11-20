@@ -180,8 +180,10 @@ statement: ID '=' expr ';'                      {   info *infS = (info *)malloc(
                                                     $$ = create_bNode(IFTHENELSE, NULL, $3, $6, $8); }
 | WHILE '(' expr ')' block                      {   
                                                     $$ = create_bNode(WHILELOOP, NULL, $3, NULL, $5); }
-| RETURN expr ';'                               {   
-                                                    $$ = create_bNode(RETURN1, NULL, $2, NULL, NULL); }
+| RETURN expr ';'                               {   info *infS = (info *)malloc(sizeof(info));
+                                                    infS->flag = RETURN1;
+                                                    infS->line = yylineno;
+                                                    $$ = create_bNode(RETURN1, infS, $2, NULL, NULL); }
 | RETURN ';'                                    {   
                                                     $$ = create_bNode(RETURN2, NULL, NULL, NULL, NULL); }
 | ';'                                           {   
@@ -213,31 +215,58 @@ expr: ID                                        {   info *infI = (info *)malloc(
                                                     $$ = create_bNode(IDENTIFICADOR2, infI, NULL, NULL, NULL); }
 | method_call                                   {   $$ = $1; }
 | litaral                                       {   $$ = $1; }
-| expr '+' expr                                 {   
-                                                    $$ = create_bNode(SUMA, NULL, $1, NULL, $3); }
-| expr '-' expr                                 {   
-                                                    $$ = create_bNode(RESTA, NULL, $1, NULL, $3); }
-| expr '*' expr                                 {   
-                                                    $$ = create_bNode(MULT, NULL, $1, NULL, $3); }
-| expr '/' expr                                 {   
-                                                    $$ = create_bNode(DIV, NULL, $1, NULL, $3); }
-| expr '%' expr                                 {   
-                                                    $$ = create_bNode(PORC, NULL, $1, NULL, $3); }
-| expr AND expr                                 {   
-                                                    $$ = create_bNode(CONJUNCION, NULL, $1, NULL, $3); }
-| expr OR expr                                  {   
-                                                    $$ = create_bNode(DISYUNCION,NULL, $1, NULL, $3); }
-| expr EQUAL expr                               {   
-                                                    $$ = create_bNode(IGUAL, NULL, $1, NULL, $3); }
-| expr '<' expr                                 {   
-                                                    $$ = create_bNode(MENOR, NULL, $1, NULL, $3); }
-| expr '>' expr                                 {   
-                                                    $$ = create_bNode(MAYOR, NULL, $1, NULL, $3); }
-| '-' expr %prec UNARY                          {   
-                                                    $$ = create_bNode(NEGATIVO, NULL, $2, NULL, NULL); }
-| '!' expr %prec UNARY                          {   
-                                                    $$ = create_bNode(NEGACION, NULL, $2, NULL, NULL); }
-| '(' expr ')'                                  {   $$ = $2; }
+| expr '+' expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = SUMA;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(SUMA, infI, $1, NULL, $3); }
+| expr '-' expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = RESTA;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(RESTA, infI, $1, NULL, $3); }
+| expr '*' expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = MULT;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(MULT, infI, $1, NULL, $3); }
+| expr '/' expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = DIV;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(DIV, infI, $1, NULL, $3); }
+| expr '%' expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = PORC;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(PORC, infI, $1, NULL, $3); }
+| expr AND expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = CONJUNCION;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(CONJUNCION, infI, $1, NULL, $3); }
+| expr OR expr                                  {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = DISYUNCION;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(DISYUNCION,infI, $1, NULL, $3); }
+| expr EQUAL expr                               {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = IGUAL;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(IGUAL, infI, $1, NULL, $3); }
+| expr '<' expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = MENOR;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(MENOR, infI, $1, NULL, $3); }
+| expr '>' expr                                 {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = MAYOR;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(MAYOR, infI, $1, NULL, $3); }
+| '-' expr %prec UNARY                          {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = NEGATIVO;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(NEGATIVO, infI, $2, NULL, NULL); }
+| '!' expr %prec UNARY                          {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = NEGACION;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(NEGACION, infI, $2, NULL, NULL); }
+| '(' expr ')'                                  {   info *infI = (info *)malloc(sizeof(info));
+                                                    infI->flag = PARENTESIS;
+                                                    infI->line = yylineno;
+                                                    $$ = create_bNode(PARENTESIS, infI, $2, NULL, NULL); }
 ;
 
 litaral: INT                                    {   info *infS = (info *)malloc(sizeof(info));
