@@ -42,7 +42,6 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			instructionList(current->left, tac);
 
 		}
-		//Tengo que preguntar como se hace
 		if (current->fact == IFTHENELSE) {
 			instructionList(current->left, tac);
 			info * x1 = current->left->infoN;
@@ -57,7 +56,6 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			instructionList(current->right, tac);
 			loadInstruction(tac, END_BLOCK_F, NULL, NULL, NULL);
 		}
-		//Tengo que preguntar como se hace
 		if (current->fact == WHILELOOP) {
 			instructionList(current->left, tac);
 			info * x1 = current->left->infoN;
@@ -69,7 +67,6 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			instructionList(current->right, tac);
 			loadInstruction(tac, END_BLOCK_W, NULL, NULL, NULL);
 		}
-		//Donde guardo el resultado, en x2 o current->infoN
 		if (current->fact == RETURN1) {
 			instructionList(current->left, tac);
 			info * x = current->left->infoN;
@@ -118,8 +115,6 @@ tStack * instructionList(bNode *tree, tStack **tac){
 				}
 			}
 		}
-		// Estos casos son todos iguales, solo que la etiqueta va a ser diferente. 
-		//Tengo que preguntar si puedo usar la misma estructura de los label
 		if (current->fact == SUMA) {
 			instructionList(current->left, tac);
 			instructionList(current->right, tac);
@@ -207,64 +202,4 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			loadInstruction(tac, PARENT, x, NULL, current->infoN);
 		}
 	}
-
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*tStack *loadInstrucciones(tStack *tree, enum tLabel type, info *arg1, info *arg2, info *result)
-{
-	tStack *new = malloc(sizeof(tStack));
-	new->next = tree;
-	new->op = type;
-	new->arg1 = arg1;
-	new->arg2 = arg2;
-	new->result = result;
-	return new;
-}*/
-
-/*
-tStack *createInstruction(tStack **tac, enum tLabel type, bNode *tree) {
-	tStack * auxLeft = NULL;
-	tStack * auxRight = NULL;
-	tStack * nodeLeftAux = (tStack *) malloc(sizeof(tStack)); //en listInstruct deberiamos traer los sub arboles en este aux)
-	tStack * nodeRightAux = (tStack *) malloc(sizeof(tStack));
-	info * infoNLeft;
-	info * infoNRight;
-
-	if ((strcmp(tree->left->infoN->type, "boolean") == 0) || (strcmp(tree->left->infoN->type, "integer") == 0))
-		infoNLeft = tree->left->(NECESITAMOS LA INFO DE LA TABLA);
-	else{
-		auxLeft = listInstrcciones(tree->left, nodeLeft);
-		infoNLeft = auxLeft->result;(va a traer el resultado final)
-	}
-
-	if ((strcmp(tree->right->infoN->type, "boolean") == 0) || (strcmp(tree->right->infoN->type, "integer") == 0))
-		infoNRight = tree->right-> (NECESITAMOS LA INFO DE LA TABLA); 
-	else{
-		auxRight = listInstrcciones(tree->right, nodeRight);
-		infoNRight = auxRight->result;
-	}
-	
-	if (auxLeft != NULL){
-		list->sig = nodeLeftAux->sig;
-		list = auxLeft; 
-	}
-	if (auxRight != NULL){
-		list->sig = nodeRightAux->sig;
-		list = auxRight;
-	}
-	return loadInstrucciones(list, type, infoNLeft, infoNRight, VARIABLE AUX);
-}
-*/
