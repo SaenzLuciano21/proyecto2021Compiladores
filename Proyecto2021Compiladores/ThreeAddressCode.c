@@ -46,13 +46,28 @@ tStack * instructionList(bNode *tree, tStack **tac){
 		if (current->fact == IFTHENELSE) {
 			instructionList(current->left, tac);
 			info * x1 = current->left->infoN;
+			info * x2, *x3;
+			x2->name = "BLOCK_T";
+			x3->name = "BLOCK_F";
+			loadInstruction(tac, IIF, x2, x3, x1);
+			loadInstruction(tac, BLOCK_T, NULL, NULL, NULL);
 			instructionList(current->middle, tac);
+			loadInstruction(tac, END_BLOCK_T, NULL, NULL, NULL);
+			loadInstruction(tac, BLOCK_F, NULL, NULL, NULL);
 			instructionList(current->right, tac);
-
+			loadInstruction(tac, END_BLOCK_F, NULL, NULL, NULL);
 		}
 		//Tengo que preguntar como se hace
 		if (current->fact == WHILELOOP) {
-			
+			instructionList(current->left, tac);
+			info * x1 = current->left->infoN;
+			info * x2, * x3;
+			x2->name = "BLOCK_W";
+			x3->name = "END_BLOCK_W";
+			loadInstruction(tac, WWHILE, x2, NULL, x1);
+			loadInstruction(tac, BLOCK_W, NULL, NULL, NULL);
+			instructionList(current->right, tac);
+			loadInstruction(tac, END_BLOCK_W, NULL, NULL, NULL);
 		}
 		//Donde guardo el resultado, en x2 o current->infoN
 		if (current->fact == RETURN1) {
@@ -64,8 +79,8 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			loadInstruction(tac, CALL_F, NULL, NULL, current->infoN);
 		}
 		if(current->fact == CPMETHOD) {
-			instructionList(current->left, tac);
 			if(current->left->fact != LISTEXPR) {
+				instructionList(current->left, tac);
 				info * x = current->left->infoN;
 				info * p;		// Aca voy a llevar el orden de los parametros
 				p->value = 1; 	// En este caso como es un solo parametro pongo 1
@@ -105,12 +120,85 @@ tStack * instructionList(bNode *tree, tStack **tac){
 		}
 		// Estos casos son todos iguales, solo que la etiqueta va a ser diferente. 
 		//Tengo que preguntar si puedo usar la misma estructura de los label
-		if (current->fact == SUMA || current->fact == RESTA || current->fact == MULT || current->fact == DIV || current->fact == PORC) {
+		if (current->fact == SUMA) {
 			instructionList(current->left, tac);
 			instructionList(current->right, tac);
 			info * x1 = current->left->infoN;
 			info * x2 = current->right->infoN;
 			loadInstruction(tac, SUM, x1, x2, current->infoN);
+		}
+		if (current->fact == RESTA) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, RES, x1, x2, current->infoN);
+		}
+		if (current->fact == MULT) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, MUL, x1, x2, current->infoN);
+		}
+		if (current->fact == DIV) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, SPLIT, x1, x2, current->infoN);
+		}
+		if (current->fact == PORC) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, PERCENTAGE, x1, x2, current->infoN);
+		}
+		if (current->fact == CONJUNCION) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, AAND, x1, x2, current->infoN);
+		}
+		if (current->fact == DISYUNCION) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, OOR, x1, x2, current->infoN);
+		}
+		if (current->fact == IGUAL) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, EEQUAL, x1, x2, current->infoN);
+		}
+		if (current->fact == MENOR) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, LESS, x1, x2, current->infoN);
+		}
+		if (current->fact == MAYOR) {
+			instructionList(current->left, tac);
+			instructionList(current->right, tac);
+			info * x1 = current->left->infoN;
+			info * x2 = current->right->infoN;
+			loadInstruction(tac, HIGHER, x1, x2, current->infoN);
+		}
+		if (current->fact == NEGATIVO) {
+			instructionList(current->left, tac);
+			info * x1 = current->left->infoN;
+			loadInstruction(tac, NEGATIVE, x1, NULL, current->infoN);
+		}
+		if (current->fact == NEGACION) {
+			instructionList(current->left, tac);
+			info * x1 = current->left->infoN;
+			loadInstruction(tac, DENIAL, x1, NULL, current->infoN);
 		}
 		//Preguntar tambien, donde guardo el resultado y tambien irian otros casos
 		if (current->fact == PARENTESIS) {

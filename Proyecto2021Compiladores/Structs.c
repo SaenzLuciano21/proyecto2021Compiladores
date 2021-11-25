@@ -61,13 +61,30 @@ typedef enum tTAC
     SUM,
     RES,
     MUL,
+    SPLIT,
+    PERCENTAGE,
+    AAND,
+    OOR,
+    EEQUAL,
+    LESS,
+    HIGHER,
+    NEGATIVE,
+    DENIAL,
     BEGIN_FUNCTION,
     END_FUNCTION,
     ASSIG,
     CALL_F,
     LOAD_PARAM,
     RET,
-    PARENT
+    PARENT, 
+    IIF, 
+    WWHILE,
+    BLOCK_T,
+    BLOCK_F,
+    BLOCK_W,
+    END_BLOCK_T,
+    END_BLOCK_F,
+    END_BLOCK_W
 } tT;
 
 /*Estructura del nodo*/
