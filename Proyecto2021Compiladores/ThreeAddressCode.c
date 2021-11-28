@@ -3,17 +3,20 @@
 #include <stdio.h>
 #include "SymbolTable.c"
 
-tStack * loadInstruction(tStack **tac, enum tTAC type, info *arg1, info *arg2, info *result){
+void loadInstruction(tStack **tac, enum tTAC type, info *arg1, info *arg2, info *result){
 	tStack **new = (tStack *)malloc(sizeof(tStack));
 	(*new)->op = type;
 	(*new)->arg1 = arg1;
 	(*new)->arg2 = arg2;
 	(*new)->result = result;
-	(*tac)->next = new; 
-	return &new;
+	(*new)->next = tac;
+	(*tac) = new;
 }
 
-tStack * instructionList(bNode *tree, tStack **tac){
+
+
+
+void instructionList(bNode *tree, tStack **tac){
     bNode *current = tree;
 	if (current->fact != NULL) {
 		if (current->fact == PROG) {
@@ -62,7 +65,7 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			info * x2, * x3;
 			x2->name = "BLOCK_W";
 			x3->name = "END_BLOCK_W";
-			loadInstruction(tac, WWHILE, x2, NULL, x1);
+			loadInstruction(tac, WWHILE, x2, x3, x1);
 			loadInstruction(tac, BLOCK_W, NULL, NULL, NULL);
 			instructionList(current->right, tac);
 			loadInstruction(tac, END_BLOCK_W, NULL, NULL, NULL);
@@ -76,8 +79,8 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			loadInstruction(tac, CALL_F, NULL, NULL, current->infoN);
 		}
 		if(current->fact == CPMETHOD) {
+			instructionList(current->left, tac);
 			if(current->left->fact != LISTEXPR) {
-				instructionList(current->left, tac);
 				info * x = current->left->infoN;
 				info * p;		// Aca voy a llevar el orden de los parametros
 				p->value = 1; 	// En este caso como es un solo parametro pongo 1
@@ -93,20 +96,20 @@ tStack * instructionList(bNode *tree, tStack **tac){
 			p1->value = cant;
 			loadInstruction(tac, LOAD_PARAM, p1, NULL, x1);
 			int b = 1;
-			current = current->right;
+			bNode * aux = current->right;
 			while (b != 0) {
-				if (current->fact == LISTEXPR) {
-					instructionList(current->left, tac);
-					info * x2 = current->left->infoN;
+				if (aux->fact == LISTEXPR) {
+					instructionList(aux->left, tac);
+					info * x2 = aux->left->infoN;
 					info * p2;
 					cant++;
 					p2->value = cant;
 					loadInstruction(tac, LOAD_PARAM, p2, NULL, x2);
-					current = current->right;
+					aux = aux->right;
 				}
 				else {
-					instructionList(current->right, tac);	
-					info * x2 = current->right->infoN;
+					instructionList(aux->right, tac);	
+					info * x2 = aux->right->infoN;
 					info * p2;
 					cant++;
 					p2->value = cant;
